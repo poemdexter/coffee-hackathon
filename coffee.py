@@ -2,8 +2,10 @@ import RPi.GPIO as GPIO
 import time
 import subprocess
 import json
+import boto3
 from os.path import join, dirname
 from watson_developer_cloud import VisualRecognitionV3
+
 
 # config setup
 last_image_loc = join(dirname(__file__), 'last.jpg')
@@ -13,6 +15,9 @@ with open(join(dirname(__file__), 'config.json'), 'rb') as data:
 
 # watson setup
 visual_recognition = VisualRecognitionV3('2016-05-20', api_key=config['watson_key'])
+
+# amazon S3 setup
+s3 = boto3.resource('s3')
 
 # button setup
 GPIO.setmode(GPIO.BCM)
@@ -45,9 +50,20 @@ def watson_check():
     
     return accused
     
-#def upload_to_aws(accused):
-  # todo: upload to aws
+def upload_to_aws(accused):
+  # upload last image to S3
+  print('Uploading pic to S3')
+  last_pic = open(last_image_loc, 'rb')
+  s3.Bucket(config["s3_bucket"]).put_object(Key='last.jpg', Body=last_pic)
 
+  # upload last name to S3
+  print('Uploading name to S3')
+  last_name = open("last.txt", "w")
+  last_name.write(accused)
+  last_name.close()
+  last_name = open("last.txt", 'rb')
+  s3.Bucket(config["s3_bucket"]).put_object(Key='last.txt', Body=last_name)
+  
 while True:
   input_state = GPIO.input(18)
   if input_state == False:
@@ -57,5 +73,7 @@ while True:
     accused = watson_check()
     #watson_check_debug()
     
-    #upload_to_aws(accused)
+    upload_to_aws(accused)
+    
+    print('Waiting 10 seconds')
     time.sleep(10)
