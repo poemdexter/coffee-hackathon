@@ -52,7 +52,7 @@ def watson_check():
     
     # save accused name
     last_name = open(last_name_loc, "w")
-    last_name.write(accused)
+    last_name.write(accused.title())
     last_name.close()
     
 def upload_to_aws():
