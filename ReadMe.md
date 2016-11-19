@@ -3,7 +3,9 @@
 ### Overview
 This project is the **CoffeeWatch** entry for the AT&T Hackathon at The DEC in Dallas on Nov 18th to 19th.
 
-It is a python script running as a service on a headless Raspberry Pi 3.
+It is a python script running as a service on a headless Raspberry Pi 3.  There is also a java project in `coffee-status` for the Alexa skill.
+
+**100% of the code was written here at the hackathon.***
 
 ### Purpose
 
