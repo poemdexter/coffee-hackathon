@@ -1,3 +1,4 @@
 {
-  "watson_key": "xxx"
+  "watson_key": "xxx",
+  "s3_bucket": "xxx
 }
